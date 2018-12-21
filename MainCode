@@ -1,0 +1,55 @@
+'written by Parth Patel ppb0208@gmail.com
+'you have to open up Solidworks > part first
+'then run this macro
+'look for Task1.swp file
+'download and run Task1.swp file and that would be great
+
+'''''code to extrude rectangular beam using SolidWOrks API
+
+Dim swApp As SldWorks.SldWorks
+
+Dim Part As ModelDoc2
+
+Dim frontplaneselection As Boolean
+Dim longstatus As Long, longwarnings As Long
+
+Sub extruderectangle()
+Set swApp = Application.SldWorks
+
+'enter into the part and select front plane
+Set Part = swApp.ActiveDoc
+Part.SketchManager.InsertSketch True
+frontplaneselection = Part.Extension.SelectByID2("Front Plane", "PLANE", 1, 1, 1, False, 0, Nothing, 0)
+
+'user form
+BeamForm.Show
+
+
+End Sub
+
+Public Sub createbeam(XWidth As Double, YHeight As Double, Extrude As Double)
+
+'sketch in XY plane
+Dim therectangle As Variant
+Dim Xlength As Double
+Dim Ylength As Double
+Xlength = XWidth
+Ylength = YHeight
+
+'1X1 rectangle
+therectangle = Part.SketchManager.CreateCenterRectangle(0, 0, 0, Xlength / 2, Ylength / 2, 0)
+Part.ClearSelection2 True
+
+'View
+Part.ShowNamedView2 "*Trimetric", 8
+Part.ViewZoomtofit2
+
+'extrude in Z direction
+Dim myFeature As Object
+Dim Zlength As Double
+Zlength = Extrude
+
+Set myFeature = Part.FeatureManager.FeatureExtrusion2(True, False, False, 0, 0, Zlength, Zlength, False, False, False, False, 1, 1, False, False, False, False, True, True, True, 0, 0, False)
+
+End Sub
+
